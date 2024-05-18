@@ -1,19 +1,44 @@
-require('dotenv').config();
-const { Sequelize, QueryTypes } = require('sequelize');
+import 'dotenv/config';
+import { Sequelize, Model, DataTypes } from 'sequelize';
+import express from 'express';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+const app = express();
 
-const main = async () => {
-  try {
-    await sequelize.authenticate();
-    const notes = await sequelize.query('SELECT * FROM notes', {
-      type: QueryTypes.SELECT,
-    });
-    console.log(notes);
-    sequelize.close();
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
+export const sequelize = new Sequelize(process.env.DATABASE_URL);
+
+class Note extends Model {}
+Note.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    important: {
+      type: DataTypes.BOOLEAN,
+    },
+    date: {
+      type: DataTypes.DATE,
+    },
+  },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    modelName: 'note',
   }
-};
+);
 
-main();
+app.get('/api/notes', async (req, res) => {
+  const notes = await Note.findAll();
+  res.json(notes);
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

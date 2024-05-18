@@ -3,39 +3,59 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import express from 'express';
 
 const app = express();
+app.use(express.json());
 
 export const sequelize = new Sequelize(process.env.DATABASE_URL);
 
-class Note extends Model {}
-Note.init(
+class Blog extends Model {}
+Blog.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    content: {
+    author: {
+      type: DataTypes.TEXT,
+    },
+    url: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    important: {
-      type: DataTypes.BOOLEAN,
+    title: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    date: {
-      type: DataTypes.DATE,
+    likes: {
+      type: DataTypes.INTEGER,
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'note',
+    modelName: 'blog',
   }
 );
 
-app.get('/api/notes', async (req, res) => {
-  const notes = await Note.findAll();
+app.get('/api/blogs', async (req, res) => {
+  const notes = await Blog.findAll();
   res.json(notes);
+});
+
+app.post('/api/blogs', async (req, res) => {
+  console.log(req.body);
+  const blog = await Blog.create(req.body);
+  res.json(blog);
+});
+
+app.delete('/api/blogs/:id', async (req, res) => {
+  await Blog.destroy({
+    where: {
+      id: req.params.id,
+    },
+  });
+  res.status(204).end();
 });
 
 const PORT = process.env.PORT || 3001;

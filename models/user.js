@@ -1,35 +1,32 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../util/db.js';
 
-export default class Blog extends Model {}
+export default class User extends Model {}
 
-Blog.init(
+User.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    author: {
-      type: DataTypes.TEXT,
-    },
-    url: {
+    name: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    title: {
+    username: {
       type: DataTypes.TEXT,
+      unique: true,
       allowNull: false,
-    },
-    likes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      validate: {
+        isEmail: true,
+      },
     },
   },
   {
     sequelize,
     underscored: true,
-    timestamps: false,
-    modelName: 'blog',
+    timestamps: true,
+    modelName: 'user',
   }
 );

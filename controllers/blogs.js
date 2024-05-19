@@ -1,32 +1,44 @@
 import express from 'express';
-import { Blog } from '../models/index.js';
+import { Blog, User } from '../models/index.js';
+import tokenExtractor from '../middlewares/tokenExtractor.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const notes = await Blog.findAll();
+    const notes = await Blog.findAll({ include: User });
     res.json(notes);
   } catch (error) {
     next(error);
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', tokenExtractor, async (req, res, next) => {
   try {
-    const blog = await Blog.create(req.body);
+    const user = await User.findByPk(req.decodedToken.id);
+    const blog = await Blog.create({ ...req.body, userId: user.id });
     res.json(blog);
   } catch (error) {
     next(error);
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', tokenExtractor, async (req, res, next) => {
   try {
     const { id } = req.params;
+    const blog = await Blog.findByPk(id);
+
+    const user = await User.findByPk(req.decodedToken.id);
+
+    if (blog.userId !== user.id) {
+      const error = new Error('Unauthorized');
+      error.code = 401;
+      return next(error);
+    }
+
     await Blog.destroy({
       where: {
-        id,
+        id: blog.id,
       },
     });
     res.status(204).end();

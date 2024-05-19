@@ -6,7 +6,7 @@ const errorHandler = (error, req, res, next) => {
     return response.status(400).send({ error: 'malformatted id' });
   }
 
-  next(error);
+  return res.send({ error: [error.message] });
 };
 
 export default errorHandler;

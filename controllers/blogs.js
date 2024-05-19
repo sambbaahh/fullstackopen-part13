@@ -1,13 +1,30 @@
 import express from 'express';
 import { Blog, User } from '../models/index.js';
 import tokenExtractor from '../middlewares/tokenExtractor.js';
+import { Op } from 'sequelize';
 
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const notes = await Blog.findAll({ include: User });
-    res.json(notes);
+    const { search } = req.query;
+    const where = search
+      ? {
+          [Op.or]: [
+            { title: { [Op.substring]: search } },
+            { author: { [Op.substring]: search } },
+          ],
+        }
+      : {};
+
+    console.log(where);
+
+    const blogs = await Blog.findAll({
+      attributes: { exclude: ['userId'] },
+      include: { model: User, attributes: ['id', 'username', 'name'] },
+      where,
+    });
+    res.json(blogs);
   } catch (error) {
     next(error);
   }

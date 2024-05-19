@@ -1,7 +1,7 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { Blog, User } from '../models/index.js';
 import tokenExtractor from '../middlewares/tokenExtractor.js';
-import { Op } from 'sequelize';
 
 const router = express.Router();
 
@@ -23,6 +23,7 @@ router.get('/', async (req, res, next) => {
       attributes: { exclude: ['userId'] },
       include: { model: User, attributes: ['id', 'username', 'name'] },
       where,
+      order: [['likes', 'DESC']],
     });
     res.json(blogs);
   } catch (error) {

@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../util/config');
+const { ActiveSession, User } = require('../models');
 
-const tokenExtractor = (req, res, next) => {
+const tokenExtractor = async (req, res, next) => {
   try {
     const authorization = req.get('authorization');
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -11,12 +12,29 @@ const tokenExtractor = (req, res, next) => {
       error.code = 401;
       return next(error);
     }
+
+    const user = await User.findByPk(req.decodedToken.id);
+    if (!user || user.disabled) {
+      const error = new Error('User not found or disabled');
+      error.code = 401;
+      return next(error);
+    }
+
+    const usersToken = await ActiveSession.findOne({
+      where: { token: authorization.substring(7) },
+    });
+
+    if (!usersToken || usersToken.token !== authorization.substring(7)) {
+      const error = new Error('Token not found or invalid');
+      error.code = 401;
+      return next(error);
+    }
+    next();
   } catch (error) {
     const jwtError = new Error('Token invalid');
     jwtError.code = 401;
     return next(jwtError);
   }
-  next();
 };
 
 module.exports = tokenExtractor;

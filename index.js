@@ -7,6 +7,7 @@ const authorRouter = require('./controllers/authors');
 const readingListRouter = require('./controllers/readingLists');
 const userRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
+const logoutRouter = require('./controllers/logout');
 const errorHandler = require('./middlewares/errorHandler');
 const { connectToDatabase } = require('./util/db');
 
@@ -18,6 +19,7 @@ app.use('/api/authors', authorRouter);
 app.use('/api/readinglists', readingListRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/logout', logoutRouter);
 
 app.use(errorHandler);
 

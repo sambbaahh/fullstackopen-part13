@@ -27,6 +27,10 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
     });
 
     await queryInterface.createTable('users', {
@@ -46,6 +50,14 @@ module.exports = {
         validate: {
           isEmail: true,
         },
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     });
 

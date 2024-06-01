@@ -1,5 +1,5 @@
 const express = require('express');
-const { Blog, User } = require('../models');
+const { Blog, User, ReadingList } = require('../models');
 const tokenExtractor = require('../middlewares/tokenExtractor');
 
 const router = express.Router();
@@ -28,9 +28,14 @@ router.get('/:id', async (req, res, next) => {
       include: [
         {
           model: Blog,
+          attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
           as: 'readings',
           through: {
             attributes: [],
+          },
+          include: {
+            model: ReadingList,
+            attributes: { exclude: ['userId', 'blogId'] },
           },
         },
       ],

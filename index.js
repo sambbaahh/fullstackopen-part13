@@ -1,7 +1,7 @@
 const express = require('express');
 require('express-async-errors');
 
-const { PORT } = require('./util/config');
+const { PORT } = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 const authorRouter = require('./controllers/authors');
 const readingListRouter = require('./controllers/readingLists');
@@ -9,7 +9,7 @@ const userRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const logoutRouter = require('./controllers/logout');
 const errorHandler = require('./middlewares/errorHandler');
-const { connectToDatabase } = require('./util/db');
+const { connectToDatabase } = require('./utils/db');
 
 const app = express();
 app.use(express.json());

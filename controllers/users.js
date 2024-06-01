@@ -1,5 +1,5 @@
 const express = require('express');
-const { Blog, User } = require('../models/index');
+const { Blog, User } = require('../models');
 const tokenExtractor = require('../middlewares/tokenExtractor');
 
 const router = express.Router();
@@ -21,6 +21,27 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const users = await User.findAll({
+      include: [
+        {
+          model: Blog,
+          as: 'readings',
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+      where: { id: req.params.id },
+    });
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.put('/:username', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);

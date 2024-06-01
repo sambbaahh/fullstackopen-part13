@@ -24,6 +24,12 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
+    const { read } = req.query;
+    const where = {};
+    if (read) {
+      where.read = read;
+    }
+
     const users = await User.findAll({
       include: [
         {
@@ -36,6 +42,7 @@ router.get('/:id', async (req, res, next) => {
           include: {
             model: ReadingList,
             attributes: { exclude: ['userId', 'blogId'] },
+            where: where,
           },
         },
       ],

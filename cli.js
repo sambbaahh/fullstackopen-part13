@@ -1,4 +1,4 @@
-import { sequelize } from './index.js';
+const { sequelize } = require('./index');
 
 const cli = async () => {
   const result = await sequelize.query('SELECT * FROM blogs', {

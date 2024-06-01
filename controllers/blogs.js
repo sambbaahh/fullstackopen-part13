@@ -1,7 +1,7 @@
-import express from 'express';
-import { Op } from 'sequelize';
-import { Blog, User } from '../models/index.js';
-import tokenExtractor from '../middlewares/tokenExtractor.js';
+const express = require('express');
+const { Op } = require('sequelize');
+const { Blog, User } = require('../models/index');
+const tokenExtractor = require('../middlewares/tokenExtractor');
 
 const router = express.Router();
 
@@ -91,4 +91,4 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-export default router;
+module.exports = router;

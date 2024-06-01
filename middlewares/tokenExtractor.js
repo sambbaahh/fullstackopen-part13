@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
-import { SECRET } from '../util/config.js';
+const jwt = require('jsonwebtoken');
+const { SECRET } = require('../util/config');
 
 const tokenExtractor = (req, res, next) => {
   try {
@@ -19,4 +19,4 @@ const tokenExtractor = (req, res, next) => {
   next();
 };
 
-export default tokenExtractor;
+module.exports = tokenExtractor;

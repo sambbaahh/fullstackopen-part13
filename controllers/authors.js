@@ -1,6 +1,6 @@
-import express from 'express';
-import { Sequelize } from 'sequelize';
-import { Blog } from '../models/index.js';
+const express = require('express');
+const { Sequelize } = require('sequelize');
+const { Blog } = require('../models/index');
 
 const router = express.Router();
 
@@ -22,4 +22,4 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-export default router;
+module.exports = router;

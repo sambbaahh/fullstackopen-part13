@@ -1,7 +1,7 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import { User } from '../models/index.js';
-import { SECRET } from '../util/config.js';
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models/index');
+const { SECRET } = require('../util/config');
 
 const router = express.Router();
 
@@ -34,4 +34,4 @@ router.post('/', async (request, response, next) => {
     .send({ token, username: user.username, name: user.name });
 });
 
-export default router;
+module.exports = router;

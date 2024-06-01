@@ -1,6 +1,6 @@
-import express from 'express';
-import { Blog, User } from '../models/index.js';
-import tokenExtractor from '../middlewares/tokenExtractor.js';
+const express = require('express');
+const { Blog, User } = require('../models/index');
+const tokenExtractor = require('../middlewares/tokenExtractor');
 
 const router = express.Router();
 
@@ -42,4 +42,4 @@ router.put('/:username', tokenExtractor, async (req, res, next) => {
     next(error);
   }
 });
-export default router;
+module.exports = router;

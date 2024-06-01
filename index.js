@@ -1,12 +1,13 @@
-import express from 'express';
-import 'express-async-errors';
+const express = require('express');
+require('express-async-errors');
 
-import { PORT } from './util/config.js';
-import blogsRouter from './controllers/blogs.js';
-import authorRouter from './controllers/authors.js';
-import userRouter from './controllers/users.js';
-import loginRouter from './controllers/login.js';
-import errorHandler from './middlewares/errorHandler.js';
+const { PORT } = require('./util/config');
+const blogsRouter = require('./controllers/blogs');
+const authorRouter = require('./controllers/authors');
+const userRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
+const errorHandler = require('./middlewares/errorHandler');
+const { connectToDatabase } = require('./util/db');
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use('/api/login', loginRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectToDatabase();
   console.log(`Server running on port ${PORT}`);
 });
